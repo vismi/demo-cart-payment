@@ -18,6 +18,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  /**
+   * Data to mock a shopping cart
+   */
   displayedColumns: string[] = ["item", "description", "cost"];
   transactions: Transaction[] = [
     {
@@ -40,13 +43,19 @@ export class DashboardComponent implements OnInit {
     }
   ];
 
-  /** Gets the total cost of all transactions. */
+  /**
+   * Method to calculate total cost
+   * @param transactions
+   */
   getTotalCost() {
     return this.transactions
       .map(t => t.cost)
       .reduce((acc, value) => acc + value, 0);
   }
 
+  /**
+   * Method to confirm basket summary, and continue to payment
+   */
   navigateToPayment() {
     this.router.navigate(["paymentDetails"]);
   }

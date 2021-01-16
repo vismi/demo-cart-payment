@@ -9,6 +9,10 @@ import { PaymentDetailModel } from "../../common/models/payment-detail.model";
 export class PaymentService {
   constructor(private http: HttpClient) {}
 
+  /**
+   * Method to use Mock Transaction number between scenarios
+   * @param detail
+   */
   transactionNumber: number = 11110;
 
   public getMockTransactionNumber() {
@@ -21,7 +25,9 @@ export class PaymentService {
 
   /**
    * Method to POST payment details to DB
-   * @param detail
+   * The param mockAPI is used to determine and generate sample error and success scenarios
+   * @param detailToPost
+   * @param mockAPI
    */
   public savePaymentDetails(detailToPost: PaymentDetailModel, mockAPI: string) {
     // Since a valid API is not available mocking the Observable response
@@ -40,6 +46,10 @@ export class PaymentService {
     }
   }
 
+  /**
+   * Method handle error assording to error message received from API
+   * @param error
+   */
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error("An error event occurred:", error.error);

@@ -90,6 +90,10 @@ export class PaymentDetailFormComponent implements OnInit {
     return this.paymentForm.controls;
   }
 
+  /**
+   * Method to complete submission validations
+   * @param mockAPI used to emulate success and error scenarios
+   */
   submitPaymentDetails(mockAPI) {
     if (
       this.paymentForm.valid &&
@@ -130,6 +134,7 @@ export class PaymentDetailFormComponent implements OnInit {
                 this.paymentService.increaseMockTransactionNumber();
                 this.transactionNumber = this.paymentService.getMockTransactionNumber();
                 if (!this.duplicatePaymentUsed) {
+                  // Store card in state only if payment successful
                   let newPaymentDetail = new PaymentDetailModel();
                   newPaymentDetail = this.paymentForm.value;
                   this.store.dispatch(addPaymentDetail(newPaymentDetail));
@@ -165,6 +170,7 @@ export class PaymentDetailFormComponent implements OnInit {
     }
   }
 
+  // User can select a previously used card to auto fill the form
   selectedPreviousPaymentDetail(paymentDetailToUpdate) {
     this.paymentForm.setValue(paymentDetailToUpdate);
     this.paymentForm.controls.amountPaid.setValue(this.amountToPay.price);
@@ -172,6 +178,7 @@ export class PaymentDetailFormComponent implements OnInit {
     this.duplicatePaymentUsed = true;
   }
 
+  // Aids in Custom Datepicker functionality
   chosenYearHandler(normalizedYear: Moment) {
     const ctrlValue = this.paymentForm.controls.cardExpiryDate.value;
     ctrlValue.setYear(normalizedYear.year());
