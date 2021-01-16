@@ -1,9 +1,35 @@
-<h1 class="page-title">Cart Summary</h1>
-<span>Please confirm the details of your cart below, before proceeding to payment: </span>
+<h1 class="page-title">
+	<mat-icon>receipt</mat-icon> Cart Summary
+</h1>
+<div class="component-container row">
+	<span>Please confirm the details of your cart below, before proceeding to payment: </span>
+
+	<div class="summary">
+		<table mat-table [dataSource]="transactions" class="mat-elevation-z8">
+			<!-- Item Column -->
+			<ng-container matColumnDef="item">
+				<th mat-header-cell *matHeaderCellDef> Item </th>
+				<td mat-cell *matCellDef="let transaction"> {{transaction.item}} </td>
+				<td mat-footer-cell *matFooterCellDef> Total </td>
+			</ng-container>
+
+			<!-- Cost Column -->
+			<ng-container matColumnDef="cost">
+				<th mat-header-cell *matHeaderCellDef> Cost </th>
+				<td mat-cell *matCellDef="let transaction"> {{transaction.cost | currency}} </td>
+				<td mat-footer-cell *matFooterCellDef> {{getTotalCost() | currency}} </td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+			<tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+		</table>
+	</div>
+</div>
 
 
-<button class="continue" mat-raised-button color="accent" (click)="navigateToPayment()">
-  <mat-icon>fact_check</mat-icon>
-  <mat-icon>receipt</mat-icon>
+<div class="action-panel row">
+	<button class="continue" mat-raised-button color="accent" (click)="navigateToPayment()">
   <span>Confirm Selection</span>
 </button>
+</div>

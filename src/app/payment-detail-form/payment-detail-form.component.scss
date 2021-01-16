@@ -1,14 +1,40 @@
-.example-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
+.component-container {
+  .total-price,
+  .available-paymanent-methods,
+  .payment-detail {
+    margin: 30px 0;
   }
-  
-  .example-full-width {
-    width: 100%;
+
+  .payment-detail {
+    text-align: center;
+
+    .payment-form {
+      width: 80%;
+      margin: 50px auto;
+
+      .example-full-width {
+        width: 100%;
+      }
+
+      td {
+        padding-right: 8px;
+      }
+
+      button {
+        margin: 40px 10px;
+      }
+    }
+
+    @media (min-width: 600px) {
+      margin: 40px 0;
+      text-align: left;
+
+      .payment-form {
+        margin: 0;
+        min-width: 150px;
+        max-width: 600px;
+        width: 100%;
+      }
+    }
   }
-  
-  td {
-    padding-right: 8px;
-  }
-  
+}

@@ -1,85 +1,91 @@
-<p>Payment Details for the order #123</p>
-<mat-icon>account_balance</mat-icon>
+<h1 class="page-title">
+	<mat-icon>receipt</mat-icon> Pay For Your Purchase
+</h1>
+<div class="component-container row">
+	<div class="total-price">
+		<p>Payment Details for the order #{{transactionNumber}}</p>
+		<p>To be paid : <strong>{{amountToPay.price | currency:amountToPay.currency:'code':'4.2-2'}}</strong></p>
+	</div>
 
-<div *ngIf="storedPaymentMethods">
-    <h4>Select a previously used payment method.</h4>
-    <div *ngFor="let paymentDetail of paymentDetails$ | async; let i=index">
-    <span >{{i+1}}.</span> {{paymentDetail.cardNumber}}
-    </div>
+	<div *ngIf="storedPaymentMethods" class="available-paymanent-methods">
+		<h2 class="row heading">
+			<mat-icon>credit_card</mat-icon> Previous Payment Methods
+		</h2>
+		<p>Select a previously used payment method.</p>
+		<mat-card *ngFor="let paymentDetail of savedTransactions; let i=index" class="saved-cards"
+			(click)="selectedPreviousPaymentDetail(paymentDetail)">
+			<span >{{i+1}}. {{paymentDetail.cardNumber | cardLastFourDigitsPipe }} Expiry {{paymentDetail.cardExpiryDate | dateCardExpiryPipe}}</span>
+		</mat-card>
+	</div>
+
+	<div class="payment-detail">
+		<h2 class="row heading">
+			<mat-icon>account_balance</mat-icon> Card Detail
+		</h2>
+
+		<form class="payment-form" [formGroup]="paymentForm">
+			<table class="example-full-width" cellspacing="0">
+				<tr>
+					<td>
+						<mat-form-field class="example-full-width">
+							<mat-label>Currency</mat-label>
+							<mat-select formControlName="currency">
+								<mat-option *ngFor="let currency of availableCurrencies"
+									[disabled]="currency !== amountToPay.currency" [value]="currency">{{currency}}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+
+					</td>
+					<td>
+						<mat-form-field class="example-full-width">
+							<mat-label>Total Price</mat-label>
+							<input type="number" matInput formControlName="amountPaid">
+                </mat-form-field>
+					</td>
+				</tr>
+			</table>
+
+			<mat-form-field class="example-full-width">
+				<mat-label>Name on Credit Card</mat-label>
+				<input type="text" formControlName="cardHolderName" matInput>
+    </mat-form-field>
+
+				<mat-form-field class="example-full-width">
+					<mat-label>Card Number</mat-label>
+					<input type="text" formControlName="cardNumber" matInput>
+					<mat-hint align="end">{{paymentForm.controls.cardNumber.value.toString().length}} / 12</mat-hint>
+				</mat-form-field>
+
+
+
+				<table class="example-full-width" cellspacing="0">
+					<tr>
+						<td>
+							<mat-form-field class="example-full-width">
+								<mat-label>CVV Number</mat-label>
+								<input type="string" formControlName="securityNumber" matInput>
+                </mat-form-field>
+						</td>
+						<td>
+							<mat-form-field class="example-full-width">
+								<mat-label>Expiry Date</mat-label>
+								<input matInput [matDatepicker]="dp" formControlName="cardExpiryDate">
+								<mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+								<mat-datepicker #dp startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+									(monthSelected)="chosenMonthHandler($event, dp)" panelClass="example-month-picker">
+								</mat-datepicker>
+							</mat-form-field>
+						</td>
+					</tr>
+				</table>
+
+				<div class="row action-row">
+					<button mat-raised-button color="primary" (click)="submitPaymentDetails()">
+              <span>Complete Purchase</span>
+        </button>
+				</div>
+
+		</form>
+	</div>
 </div>
-
-<form class="example-form" [formGroup]="paymentForm">
-    <table class="example-full-width" cellspacing="0">
-        <tr>
-            <td>
-                <mat-form-field class="example-full-width">
-                    <mat-label>Currency</mat-label>
-                    <!-- <input type="text" formControlName="currency" matInput> -->
-                    <mat-select formControlName="currency">
-                        <mat-option value="option1">INR</mat-option>
-                        <mat-option value="option3">GBP</mat-option>
-                    </mat-select>
-                    <!-- <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                          {{option}}
-                        </mat-option>
-                        <mat-option value="option1">INR</mat-option>
-                        <mat-option value="option3">GBP</mat-option>
-                      </mat-autocomplete> -->
-                </mat-form-field>
-                
-            </td>
-            <td>
-                <mat-form-field class="example-full-width">
-                    <mat-label>Total Price</mat-label>
-                    <input type="number" matInput formControlName="amountPaid">
-                </mat-form-field>
-            </td>
-        </tr>
-    </table>
-
-    <mat-form-field class="example-full-width">
-        <mat-label>Name on Credit Card</mat-label>
-        <input type="text" formControlName="cardHolderName" matInput>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width">
-        <mat-label>Card Number</mat-label>
-        <input type="text" formControlName="cardNumber" matInput>
-        <mat-hint align="end">{{paymentForm.controls.cardNumber.value.toString().length}} / 12</mat-hint>
-    </mat-form-field>
-
-    
-  
-    <table class="example-full-width" cellspacing="0">
-        <tr>
-            <td>
-                <mat-form-field class="example-full-width">
-                    <mat-label>CVV Number</mat-label>
-                    <input type="string" formControlName="securityNumber" matInput>
-                </mat-form-field>
-            </td>
-            <td>
-                <mat-form-field class="example-full-width">
-                    <mat-label>Expiry Date</mat-label>
-                    <input matInput [matDatepicker]="dp" formControlName="cardExpiryDate">
-                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-                    <mat-datepicker #dp
-                                    startView="multi-year"
-                                    (yearSelected)="chosenYearHandler($event)"
-                                    (monthSelected)="chosenMonthHandler($event, dp)"
-                                    panelClass="example-month-picker">
-                    </mat-datepicker>
-                </mat-form-field>
-            </td>
-        </tr>
-        <tr>
-            <button mat-raised-button color="primary" (click)="submitPaymentDetails()">
-                <mat-icon>fact_check</mat-icon>
-                <mat-icon>receipt</mat-icon>
-                <span>Complete Payment</span>
-            </button>
-        </tr>
-    </table>
-  </form>
-
