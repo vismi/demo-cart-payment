@@ -12,6 +12,10 @@
       width: 80%;
       margin: 50px auto;
 
+      table {
+        table-layout: fixed;
+      }
+
       .example-full-width {
         width: 100%;
       }
