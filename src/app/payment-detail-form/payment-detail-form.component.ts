@@ -66,6 +66,8 @@ export class PaymentDetailFormComponent implements OnInit {
     });
 
     this.paymentForm = this.formBuilder.formGroup(new PaymentDetailModel());
+    this.paymentForm.controls.amountPaid.setValue(this.amountToPay.price);
+    this.paymentForm.controls.currency.setValue(this.amountToPay.currency);
   }
 
   paymentDetails$: Observable<PaymentDetailModel[]>;
@@ -88,10 +90,10 @@ export class PaymentDetailFormComponent implements OnInit {
     return this.paymentForm.controls;
   }
 
-  submitPaymentDetails() {
+  submitPaymentDetails(mockAPI) {
     if (
       this.paymentForm.valid &&
-      this.paymentForm.value.amountToPay === this.amountToPay.price
+      this.paymentForm.value.amountPaid === this.amountToPay.price
     ) {
       // Store card in state only if not already saved
       if (this.savedTransactions && !this.duplicatePaymentUsed) {
@@ -109,55 +111,64 @@ export class PaymentDetailFormComponent implements OnInit {
         });
       }
 
-      if (!this.duplicatePaymentUsed) {
-        let newPaymentDetail = new PaymentDetailModel();
-        newPaymentDetail = this.paymentForm.value;
-        this.store.dispatch(addPaymentDetail(newPaymentDetail));
-      }
-
-      //Duplicate Success
-      Swal.fire({
-        title: "Payment Complete!",
-        text:
-          "Your cart has been confirmed. The transaction ID for your reference is #" +
-          this.transactionNumber +
-          ".",
-        icon: "success",
-        showCancelButton: false,
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "New Transaction, Going Back to cart"
-      }).then(result => {
-        if (result.isConfirmed) {
-          this.paymentService.increaseMockTransactionNumber();
-          this.transactionNumber = this.paymentService.getMockTransactionNumber();
-          this.router.navigate(["cartSummary"]);
-        }
-      });
-      //Duplicate success
       this.paymentService
-        .savePaymentDetails(this.paymentForm.value)
-        .subscribe(response => {
-          Swal.fire({
-            title: "Payment Complete!",
-            text: "Your cart has been confirmed.",
-            icon: "success",
-            showCancelButton: false,
-            confirmButtonColor: "#3085d6",
-            confirmButtonText: "New Transaction, Going Back to cart"
-          }).then(result => {
-            if (result.isConfirmed) {
-              this.paymentService.increaseMockTransactionNumber();
-              this.transactionNumber = this.paymentService.getMockTransactionNumber();
-              this.router.navigate(["cartSummary"]);
-            }
-          });
-        })
+        .savePaymentDetails(this.paymentForm.value, mockAPI)
+        .subscribe(
+          response => {
+            Swal.fire({
+              title: "Payment Complete!",
+              text:
+                "Your cart has been confirmed. The transaction ID for your reference is #" +
+                this.transactionNumber +
+                ".",
+              icon: "success",
+              showCancelButton: false,
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "New Transaction, Going Back to dummy cart."
+            }).then(result => {
+              if (result.isConfirmed) {
+                this.paymentService.increaseMockTransactionNumber();
+                this.transactionNumber = this.paymentService.getMockTransactionNumber();
+                if (!this.duplicatePaymentUsed) {
+                  let newPaymentDetail = new PaymentDetailModel();
+                  newPaymentDetail = this.paymentForm.value;
+                  this.store.dispatch(addPaymentDetail(newPaymentDetail));
+                }
+                this.router.navigate(["cartSummary"]);
+              }
+            });
+          },
+          error => {
+            Swal.fire({
+              title: "Payment Error!",
+              text: "You have not been charged.",
+              icon: "error",
+              showCancelButton: false,
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "Try payment again with another method?"
+            }).then(result => {
+              if (result.isConfirmed) {
+                this.paymentForm = this.formBuilder.formGroup(
+                  new PaymentDetailModel()
+                );
+                this.paymentForm.controls.amountPaid.setValue(
+                  this.amountToPay.price
+                );
+                this.paymentForm.controls.currency.setValue(
+                  this.amountToPay.currency
+                );
+              }
+            });
+          }
+        )
         .unsubscribe();
     }
   }
 
   selectedPreviousPaymentDetail(paymentDetailToUpdate) {
     this.paymentForm.setValue(paymentDetailToUpdate);
+    this.paymentForm.controls.amountPaid.setValue(this.amountToPay.price);
+    this.paymentForm.controls.currency.setValue(this.amountToPay.currency);
     this.duplicatePaymentUsed = true;
   }
 

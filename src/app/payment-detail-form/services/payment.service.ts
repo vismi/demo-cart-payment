@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { throwError } from "rxjs";
+import { Observable, throwError, of } from "rxjs";
 import { catchError, retry } from "rxjs/operators";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 
@@ -23,10 +23,21 @@ export class PaymentService {
    * Method to POST payment details to DB
    * @param detail
    */
-  public savePaymentDetails(detailToPost: PaymentDetailModel) {
-    return this.http
-      .post("http://www.vismita.com", detailToPost)
-      .pipe(catchError(this.handleError));
+  public savePaymentDetails(detailToPost: PaymentDetailModel, mockAPI: string) {
+    // Since a valid API is not available mocking the Observable response
+    if (mockAPI) {
+      if (mockAPI === "success") {
+        // Mocking Success Scenario
+        return of(PaymentDetailModel);
+      } else {
+        // Mocking Failure Scenario
+        return throwError(new Error("Mock Service Failure!"));
+      }
+    } else {
+      return this.http
+        .post("http://www.vismita.com", detailToPost)
+        .pipe(catchError(this.handleError));
+    }
   }
 
   private handleError(error: HttpErrorResponse) {

@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  displayedColumns: string[] = ["item", "cost"];
+  displayedColumns: string[] = ["item", "description", "cost"];
   transactions: Transaction[] = [
     {
       item: "Demo Agency Solution",

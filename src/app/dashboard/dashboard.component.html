@@ -1,5 +1,5 @@
 <h1 class="page-title">
-	<mat-icon>receipt</mat-icon> Cart Summary
+	<mat-icon>receipt</mat-icon> Dummy Cart Summary
 </h1>
 <div class="component-container row">
 	<span>Please confirm the details of your cart below, before proceeding to payment: </span>
@@ -11,6 +11,13 @@
 				<th mat-header-cell *matHeaderCellDef> Item </th>
 				<td mat-cell *matCellDef="let transaction"> {{transaction.item}} </td>
 				<td mat-footer-cell *matFooterCellDef> Total </td>
+			</ng-container>
+
+			<!-- Item Description -->
+			<ng-container matColumnDef="description">
+				<th mat-header-cell *matHeaderCellDef class="description"> Description </th>
+				<td mat-cell *matCellDef="let transaction" class="description"> {{transaction.description}} </td>
+				<td mat-footer-cell *matFooterCellDef class="description"></td>
 			</ng-container>
 
 			<!-- Cost Column -->
