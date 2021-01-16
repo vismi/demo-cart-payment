@@ -90,13 +90,13 @@ export class PaymentDetailFormComponent implements OnInit {
 
   chosenYearHandler(normalizedYear: Moment) {
     const ctrlValue = this.paymentForm.controls.cardExpiryDate.value;
-    ctrlValue.year(normalizedYear.year());
+    ctrlValue.setYear(normalizedYear.year());
     this.paymentForm.controls.cardExpiryDate.setValue(ctrlValue);
   }
 
   chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.paymentForm.controls.cardExpiryDate.value;
-    ctrlValue.month(normalizedMonth.month());
+    ctrlValue.setMonth(normalizedMonth.month());
     this.paymentForm.controls.cardExpiryDate.setValue(ctrlValue);
     datepicker.close();
   }
