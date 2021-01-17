@@ -14,6 +14,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatSelectModule } from "@angular/material/select";
 import { MatTableModule } from "@angular/material/table";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -58,6 +59,7 @@ import {
     MatSelectModule,
     MatAutocompleteModule,
     MatTableModule,
+    MatTooltipModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreModule.forFeature(paymentDetailModelFeatureKey, reducer),
     !environment.production ? StoreDevtoolsModule.instrument() : []

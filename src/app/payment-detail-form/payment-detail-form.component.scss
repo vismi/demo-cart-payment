@@ -18,6 +18,10 @@
 
       .example-full-width {
         width: 100%;
+
+        &.input-field {
+          margin: 11px 0;
+        }
       }
 
       td {
@@ -25,7 +29,7 @@
       }
 
       button {
-        margin: 40px 10px;
+        margin: 5px 10px;
       }
     }
 

@@ -73,10 +73,12 @@ export class PaymentDetailFormComponent implements OnInit {
   paymentDetails$: Observable<PaymentDetailModel[]>;
   paymentForm: FormGroup;
   storedPaymentMethods: boolean = false;
-  availableCurrencies: Array<string> = ["INR", "GBP", "USD"];
+  isSubmitted: Boolean = false;
+  isAPIAvailable: Boolean = false;
   transactionNumber: number;
   savedTransactions: Array<PaymentDetailModel>;
   duplicatePaymentUsed: boolean = false;
+  availableCurrencies: Array<string> = ["INR", "GBP", "USD"];
   amountToPay: any = {
     price: 2000,
     currency: "GBP"
@@ -95,6 +97,7 @@ export class PaymentDetailFormComponent implements OnInit {
    * @param mockAPI used to emulate success and error scenarios
    */
   submitPaymentDetails(mockAPI) {
+    this.isSubmitted = true;
     if (
       this.paymentForm.valid &&
       this.paymentForm.value.amountPaid === this.amountToPay.price

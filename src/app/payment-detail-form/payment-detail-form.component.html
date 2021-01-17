@@ -27,7 +27,7 @@
 			<table class="example-full-width" cellspacing="0">
 				<tr>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width input-field">
 							<mat-label>Currency</mat-label>
 							<mat-select formControlName="currency">
 								<mat-option *ngFor="let currency of availableCurrencies"
@@ -38,7 +38,7 @@
 
 					</td>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width input-field">
 							<mat-label>Total Price</mat-label>
 							<input type="number" [disabled]="disabled" matInput formControlName="amountPaid">
                 </mat-form-field>
@@ -46,17 +46,21 @@
 				</tr>
 			</table>
 
-			<mat-form-field class="example-full-width">
+			<mat-form-field class="example-full-width input-field">
 				<mat-label>Name on Credit Card</mat-label>
 				<input type="text" formControlName="cardHolderName" matInput>
-				<mat-hint align="start">Use Capital Letters Only.</mat-hint>
+				<mat-error *ngIf="isSubmitted && paymentFormControl.cardHolderName.invalid">Use Capital Letters Only.
+				</mat-error>
 			</mat-form-field>
 
-			<mat-form-field class="example-full-width">
+			<mat-form-field class="example-full-width input-field">
 				<mat-label>Card Number</mat-label>
 				<input type="text" formControlName="cardNumber" matInput>
-				<mat-hint align="start">Only use digits.</mat-hint>
-				<mat-hint align="end">{{paymentForm.controls.cardNumber.value.toString().length}} / 12</mat-hint>
+				<mat-error *ngIf="isSubmitted && paymentFormControl.cardNumber.invalid">Card Number is a 16 digit
+					number, with no
+					spaces or hyphens.
+				</mat-error>
+				<mat-hint align="end">{{paymentForm.controls.cardNumber.value.toString().length}} / 16</mat-hint>
 			</mat-form-field>
 
 
@@ -64,13 +68,18 @@
 			<table class="example-full-width" cellspacing="0">
 				<tr>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width input-field">
 							<mat-label>CVV Number</mat-label>
 							<input type="string" formControlName="securityNumber" matInput>
-                </mat-form-field>
+							<mat-error *ngIf="isSubmitted && paymentFormControl.securityNumber.invalid">CVV is a 3-4
+								digit number, with
+								no spaces or
+								hyphens.
+							</mat-error>
+						</mat-form-field>
 					</td>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width input-field">
 							<mat-label>Expiry Date</mat-label>
 							<input matInput [matDatepicker]="dp" formControlName="cardExpiryDate">
 							<mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
@@ -83,11 +92,16 @@
 			</table>
 
 			<div class="row action-row">
-				<button mat-raised-button color="primary" (click)="submitPaymentDetails()">
+				<button mat-raised-button color="primary"
+        matTooltip="API unavailable. Please use below two buttons to emulate success and error scenarios."
+        (click)="submitPaymentDetails()">
               <span>Complete Purchase</span>
         </button>
 			</div>
+
+
 			<div class="row action-row">
+				<h3>API Response Emulators :</h3>
 				<button mat-raised-button color="primary" (click)="submitPaymentDetails('success')">
               <span>Mock Success Purchase</span>
         </button>

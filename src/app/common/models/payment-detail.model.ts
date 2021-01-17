@@ -9,8 +9,8 @@ import {
 } from "@rxweb/reactive-form-validators";
 
 export class PaymentDetailModel {
-  @minLength({ value: 12 })
-  @maxLength({ value: 12 })
+  @minLength({ value: 16 })
+  @maxLength({ value: 16 })
   @required()
   cardNumber: string = "";
 
